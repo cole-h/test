@@ -1,0 +1,14 @@
+name: update-flake-lock
+on:
+  workflow_dispatch: # allows manual triggering
+  pull_request:
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - run: |
+          cat README.md
+          echo woohoo!
+
