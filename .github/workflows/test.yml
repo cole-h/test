@@ -15,7 +15,7 @@ jobs:
           private_key: ${{secrets.UPDATE_APP_KEY}}
       - name: stuff
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           DESTINATION_BRANCH: test
         run: |
           echo -e "\n $(date)" >> README.md
@@ -24,7 +24,7 @@ jobs:
           git config user.email 'example@example.org'
           git commit -m 'test?'
 
-          TOKEN=${{ steps.generate-token.outputs.token }}
+          # TOKEN=${{ steps.generate-token.outputs.token }}
           # git push https://$TOKEN@github.com/cole-h/test.git
           set -x
           export CONTENT=$( base64 -i README.md )
