@@ -46,4 +46,14 @@ jobs:
             --field encoding="base64" \
             --field branch="$DESTINATION_BRANCH" \
             --field sha="$SHA"
-
+      - name: Create PR
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: test
+          delete-branch: true
+          committer: "Example <example@example.org>"
+          author: "Example <example@example.org>"
+          title: "testing pr"
+          token: ${{ steps.generate-token.outputs.token }}
+          body: "job's done"
