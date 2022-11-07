@@ -1,0 +1,26 @@
+name: update-flake-lock
+on:
+  workflow_dispatch: # allows manual triggering
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Get Updater Token
+        uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.UPDATE_APP_ID}}
+          private_key: ${{secrets.UPDATE_APP_KEY}}
+      - name: stuff
+        run: |
+          echo -e "\n $(date)" >> README.md
+          git add README.md
+          git config user.name 'Example'
+          git config user.email 'example@example.org'
+          git commit -m 'test?'
+
+          TOKEN=${{ steps.generate-token.outputs.token }}
+          git push https://$TOKEN@github.com/cole-h/test.git
+
