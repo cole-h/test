@@ -14,6 +14,9 @@ jobs:
           app_id: ${{ secrets.UPDATE_APP_ID}}
           private_key: ${{secrets.UPDATE_APP_KEY}}
       - name: stuff
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          DESTINATION_BRANCH: test
         run: |
           echo -e "\n $(date)" >> README.md
           git add README.md
@@ -37,7 +40,7 @@ jobs:
           fi
           export BASE_SHA=$( git rev-parse origin/$BASE )
           export SHA=$( git rev-parse origin/$BASE:README.md )
-          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          gh api --method PUT /repos/:owner/:repo/contents/README.md \
             --field message="test 2" \
             --field content="$CONTENT" \
             --field encoding="base64" \
