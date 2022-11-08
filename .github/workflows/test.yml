@@ -13,41 +13,24 @@ jobs:
         with:
           app_id: ${{ secrets.UPDATE_APP_ID}}
           private_key: ${{secrets.UPDATE_APP_KEY}}
-      - name: stuff
+      - name: lol
+        run: |
+            echo -e "\n$(date)" >> README.md
+      - name: branch
+        uses: peterjgrainger/action-create-branch@v2
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          DESTINATION_BRANCH: test
-        run: |
-          echo -e "\n $(date)" >> README.md
-          git add README.md
-          git config user.name 'Example'
-          git config user.email 'example@example.org'
-          git commit -m 'test?'
-
-          # TOKEN=${{ steps.generate-token.outputs.token }}
-          git push https://$TOKEN@github.com/cole-h/test.git HEAD:test || exit 1
-          exit 0
-
-          # set -x
-          # export CONTENT=$( base64 -i README.md )
-          # export BASE=$DESTINATION_BRANCH
-          # if gh api --method GET /repos/:owner/:repo/git/refs/heads/$DESTINATION_BRANCH; then
-          #   git fetch origin $DESTINATION_BRANCH
-          # else
-          #   export BASE=$(gh repo view --json defaultBranchRef --template '{{ .defaultBranchRef.name }}' ${{github.repository}})
-          #   export BASE_SHA=$( git rev-parse origin/$BASE )
-          #   gh api --method POST /repos/:owner/:repo/git/refs \
-          #     --field ref=refs/heads/$DESTINATION_BRANCH \
-          #     --field sha=$BASE_SHA
-          # fi
-          # export BASE_SHA=$( git rev-parse origin/$BASE )
-          # export SHA=$( git rev-parse origin/$BASE:README.md )
-          # gh api --method PUT /repos/:owner/:repo/contents/README.md \
-          #   --field message="test 2" \
-          #   --field content="$CONTENT" \
-          #   --field encoding="base64" \
-          #   --field branch="$DESTINATION_BRANCH" \
-          #   --field sha="$SHA"
+        with:
+          branch: refs/heads/test
+      - name: Commit file
+        uses: swinton/commit@v2
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        with:
+          files: |
+            README.md
+          commit-message: commit mesasge
+          ref: refs/heads/test
       - name: Create PR
         id: create-pr
         uses: peter-evans/create-pull-request@v3
